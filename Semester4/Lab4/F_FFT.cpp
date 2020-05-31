@@ -4,7 +4,6 @@
 #include <fstream>
 #include <complex>
 #include <cmath>
-#include <iomanip>
 
 
 using namespace std;
@@ -92,41 +91,6 @@ vector<long long> mul(vector<long long> &a, vector<long long> &b) {
     return reverseFFT(u, w);
 }
 
-string genLongNum() {
-    long long l = 250000;
-    string s;
-    for (long long i = 0; i < l; i++) {
-        s += '1';
-    }
-    s += "\n";
-    return s;
-}
-
-
-typedef complex<double> base;
-
-void fft2(vector<base> &a, bool invert) {
-    long long n = (long long) a.size();
-    if (n == 1) return;
-
-    vector<base> a0(n / 2), a1(n / 2);
-    for (long long i = 0, j = 0; i < n; i += 2, ++j) {
-        a0[j] = a[i];
-        a1[j] = a[i + 1];
-    }
-    fft2(a0, invert);
-    fft2(a1, invert);
-
-    double ang = 2 * PI / n * (invert ? -1 : 1);
-    base w(1), wn(cos(ang), sin(ang));
-    for (long long i = 0; i < n / 2; ++i) {
-        a[i] = a0[i] + w * a1[i];
-        a[i + n / 2] = a0[i] - w * a1[i];
-        if (invert)
-            a[i] /= 2, a[i + n / 2] /= 2;
-        w *= wn;
-    }
-}
 
 void mulNumberString(string &s1, string &s2) {
     vector<long long> num1;
@@ -182,27 +146,8 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    string s1;
-    string s2;
+    string s1, s2;
     cin >> s1 >> s2;
     mulNumberString(s1, s2);
-
-
-    /* using namespace std::complex_literals;
-     std::cout << std::fixed << std::setprecision(5);
-
-     std::complex<double> z1 = 1i * 1i;     // imaginary unit squared
-     std::cout << "i * i = " << z1 << '\n';
-     double PI = std::acos(-1);
-     double dd = PI / 4;
-     std::complex<double> z3 = exp(1i * dd); // Euler's formula
-     std::complex<double> z4 = exp(1i * (double) 0); // Euler's formula
-     std::cout << "exp(i * pi) = " << z3 << '\n';
-     std::cout << "exp(i * pi) = " << pow(z3, 2) << '\n';
-     std::cout << "exp(i * pi) = " << z3 * z3 << '\n';
-     std::cout << "exp(i * pi) = " << z3 * z3 << '\n';
-     std::cout << "z4 = " << long long(z4.real() + 0.5) << '\n';*/
-
-
     return 0;
 }
